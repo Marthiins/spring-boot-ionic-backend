@@ -8,60 +8,63 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+
 @Entity
-public class Categoria implements Serializable {
+public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY) //Definindo estrategica automatica dos ID
 	private Integer id;
 	private String nome;
+	private Double preco;
 	
-	//Associação de Categoria com o Produto depois tem que criar os get e set dos produtos
-	//como já vinculei muitos para muitos na tabela do produtos preciso so colocar @ManyToMany
+	//Associação de Produto com a Categoria 
+	@ManyToMany //quando temos uma tabela de muitos para muitos temos que criar a tabela auxiliar e colocar as chaves estrangeiras
+	@JoinTable(name = "Produto_Categoria",
+	     joinColumns = @JoinColumn(name = "produto_id"),
+	     inverseJoinColumns = @JoinColumn(name = "categoria_id")
+	)
+	private List<Categoria> categorias = new ArrayList<>();
 	
-	@ManyToMany(mappedBy = "categorias") //como fiz o mapeamento do atibuto categoria no produto
-	private List<Produto> produtos = new ArrayList<>();
-
-	// Construtor Padrão
-	public Categoria() {
-
+	public Produto() {
+		
 	}
-
-	public Categoria(Integer id, String nome) {
+	//Gerar o construtor sem a Categoria
+	public Produto(Integer id, String nome, Double preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.preco = preco;
 	}
-
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public String getNome() {
 		return nome;
 	}
-
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	public List<Produto> getProdutos() {
-		return produtos;
+	public Double getPreco() {
+		return preco;
 	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
+	public void setPreco(Double preco) {
+		this.preco = preco;
 	}
-
-
-	// Gerar o HashCode para fazer a comparação Usamos sempre o ID
+	public List<Categoria> getCategorias() {
+		return categorias;
+	}
+	public void setCategorias(List<Categoria> categorias) {
+		this.categorias = categorias;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,7 +72,6 @@ public class Categoria implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -78,7 +80,7 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Produto other = (Produto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -86,6 +88,7 @@ public class Categoria implements Serializable {
 			return false;
 		return true;
 	}
-
+	
+	
 	
 }
