@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.marthiins.cursomc.domain.Categoria;
+import com.marthiins.cursomc.domain.Cidade;
+import com.marthiins.cursomc.domain.Estado;
 import com.marthiins.cursomc.domain.Produto;
 import com.marthiins.cursomc.repositories.CategoriaRepository;
+import com.marthiins.cursomc.repositories.CidadeRepository;
+import com.marthiins.cursomc.repositories.EstadoRepository;
 import com.marthiins.cursomc.repositories.ProdutoRepository;
 
 
@@ -20,6 +24,12 @@ public class CursomcApplication implements CommandLineRunner {
 	private CategoriaRepository categoriaRepository; //Os repository vai ser o objeto responsavel por salvar os dados no Banco de Dados
 	@Autowired
 	private ProdutoRepository produtoRepository;
+	@Autowired
+	private EstadoRepository estadoRepository;
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -46,6 +56,21 @@ public class CursomcApplication implements CommandLineRunner {
 	
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2)); //Criar LIsta automatica
         produtoRepository.saveAll(Arrays.asList(p1, p2, p3)); // criar a Lista para salvar todos os produtos por enquanto so temos 3
+	
+	
+        Estado est1 = new Estado(null, "Brasilia");
+		Estado est2 = new Estado(null, "Goias");
+		
+		Cidade c1 = new Cidade(null, "Brazlândia", est1);
+		Cidade c2 = new Cidade(null, "Vendinha", est2);
+		Cidade c3 = new Cidade(null, "Monte Alto", est2);
+		
+		est1.getCidades().addAll(Arrays.asList(c1));
+		est2.getCidades().addAll(Arrays.asList(c2, c3));
+	
+	    estadoRepository.saveAll(Arrays.asList(est1, est2));
+	    cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+	    
 	}
 
 }
