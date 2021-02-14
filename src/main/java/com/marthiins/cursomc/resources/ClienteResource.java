@@ -7,19 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marthiins.cursomc.domain.Categoria;
-import com.marthiins.cursomc.services.CategoriaService;
+import com.marthiins.cursomc.domain.Cliente;
+import com.marthiins.cursomc.services.ClienteService;
 
 @RestController
-@RequestMapping(value="/categorias") //categoria é um endpoint
-public class CategoriaResource {
+@RequestMapping(value="/clientes") //categoria é um endpoint
+public class ClienteResource {
 
 	@Autowired
-	private CategoriaService service;
+	private ClienteService service;
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET) // Para a função poder funcionar deve-se anota-la com o devido metodo;
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
-		Categoria obj = service.find(id);
+		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 		
 	}
