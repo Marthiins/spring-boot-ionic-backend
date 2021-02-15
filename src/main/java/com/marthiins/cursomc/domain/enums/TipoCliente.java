@@ -9,12 +9,12 @@ public enum TipoCliente {
 	//Criar duas variaveis uma para guardar o codigo e outra a descrição
 
 	private int cod;
-	private String descrição;
+	private String descricao;
 	
 	//construtor do tipo enumerado ele é sempre private
-	private TipoCliente(int cod, String descrição) {
+	private TipoCliente(int cod, String descricao) {
 		this.cod = cod;
-		this.descrição = descrição;
+		this.descricao = descricao;
 	}
 	//Uma vez que estanciamos um metodo enumerado não mudamos o nome dele por isso que so temos o get
 	public int getCod() {
@@ -22,8 +22,8 @@ public enum TipoCliente {
 	}
 
 	
-	public String getDescrição() {
-		return descrição;
+	public String getDescricao() {
+		return descricao;
 	}      
 	
 	public static TipoCliente toEnum(Integer cod) {
