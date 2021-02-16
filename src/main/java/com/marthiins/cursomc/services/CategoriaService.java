@@ -23,6 +23,10 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 	
 	}
 
+	public Categoria insert(Categoria obj) {
+		obj.setId(null); //garantir na hora de inserir um objeto novo
+		return repo.save(obj);
+	}
 
 	}
 
