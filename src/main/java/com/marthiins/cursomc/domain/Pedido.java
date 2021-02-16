@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Pedido implements Serializable {
@@ -32,10 +31,9 @@ public class Pedido implements Serializable {
 	
 	//@OneToOne mapeamento bidimensional um para um
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")
-	@JsonManagedReference//o pedido tem permissão para ser serealizado 
 	private Pagamento pagamento;
 	
-	@JsonManagedReference //tem que ir la no cliente e aonde estiver o pedido coloquei o @ JsonBackReference 
+
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
 	private Cliente cliente;

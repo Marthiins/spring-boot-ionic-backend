@@ -14,8 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.marthiins.cursomc.domain.enums.TipoCliente;
 
 @Entity
@@ -31,7 +30,7 @@ public class Cliente implements Serializable {
 	private Integer tipo; //estou armazenando um numero inteiro , mas a classe cliente expoe o dado tipo cliente
 	
 	//cliente tem varios endereço associação por isso da Lista
-	@JsonManagedReference //cliente pode reseralizar os endereços dele porem o endereço nãp pode resealizar o cliente dele
+	
 	@OneToMany(mappedBy = "cliente") //um para muitos e do outro lado foi mapeado pelo campo cliente
 	private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -42,7 +41,7 @@ public class Cliente implements Serializable {
 	@CollectionTable(name ="TELEFONE")
 	private Set<String> telefones = new HashSet<>(); //uma classe para ser estanciada no set é o HashSet
 
-	@JsonBackReference
+	@JsonIgnore//@JsonBackReference por motivo de erro troquei por @jsonIgnore
 	@OneToMany(mappedBy="cliente")
 	private List<Pedido> pedidos =new ArrayList<>();
 	

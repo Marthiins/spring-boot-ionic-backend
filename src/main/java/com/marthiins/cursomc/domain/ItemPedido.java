@@ -31,7 +31,7 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 	//esses pedidos esta fazendo a referencia siclica etudo que começa com get ele intende que tem que serializar
-	@JsonIgnore
+	@JsonIgnore //Ignorei para não puxar os pedidos
 	public Pedido getPedido() {
 		return id.getPedido();
 	}

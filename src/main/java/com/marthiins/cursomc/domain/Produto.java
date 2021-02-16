@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -31,7 +30,7 @@ public class Produto implements Serializable {
 	
 	
 	//Associação de Produto com a Categoria 
-	@JsonBackReference // -> Omitir a categoria para cada produto
+	@JsonIgnore // -> Omitir a categoria para cada produto
 	@ManyToMany //quando temos uma tabela de muitos para muitos temos que criar a tabela auxiliar e colocar as chaves estrangeiras
 	@JoinTable(name = "Produto_Categoria",
 	     joinColumns = @JoinColumn(name = "produto_id"),
@@ -43,8 +42,6 @@ public class Produto implements Serializable {
 	@OneToMany(mappedBy = "id.produto")
 	private Set<ItemPedido> itens =new HashSet<>();
 	//O Set acima é para que o próprio Java garante que não haja pedidos repetidos;
-	
-	//private Object itens;
 	
 	public Produto() {
 		}

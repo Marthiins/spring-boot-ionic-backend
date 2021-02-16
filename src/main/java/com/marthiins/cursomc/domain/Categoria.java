@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,7 +22,7 @@ public class Categoria implements Serializable {
 	//Associação de Categoria com o Produto depois tem que criar os get e set dos produtos
 	//como já vinculei muitos para muitos na tabela do produtos preciso so colocar @ManyToMany
 	
-	@JsonManagedReference //Usamos isso para identificar os dados do objeto associado e do outro oposto utilizamos @JsonBackReference
+	
 	@ManyToMany(mappedBy = "categorias") //como fiz o mapeamento do atibuto categoria no produto
 	private List<Produto> produtos = new ArrayList<>();
 
