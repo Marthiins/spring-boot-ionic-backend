@@ -22,7 +22,7 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET) // Para a função poder funcionar deve-se anota-la com o devido metodo;
-	public ResponseEntity<?> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
 		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 		
@@ -35,4 +35,12 @@ public class CategoriaResource {
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@RequestMapping(value="/{id}", method = RequestMethod.PUT) // Para a função poder funcionar deve-se anota-la com o devido metodo PUT fazer a alteração
+    public ResponseEntity<Void> update (@RequestBody Categoria obj,@PathVariable Integer id){
+      //Só para garantir que a categoria vai ser atualizada é que vou passar pela URL
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+}
 }

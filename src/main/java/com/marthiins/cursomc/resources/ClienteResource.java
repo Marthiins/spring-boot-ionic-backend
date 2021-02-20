@@ -18,7 +18,7 @@ public class ClienteResource {
 	private ClienteService service;
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 		
