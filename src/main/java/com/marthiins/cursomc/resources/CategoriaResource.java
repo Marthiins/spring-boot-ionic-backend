@@ -2,15 +2,16 @@ package com.marthiins.cursomc.resources;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -53,12 +54,22 @@ public class CategoriaResource {
         return ResponseEntity.noContent().build(); //Tem que implementar lá no Categoria Service
 	}
 	
-	@RequestMapping(method = RequestMethod.GET) // Para a função poder retornar todas as Categorias
+	@RequestMapping( method = RequestMethod.GET) // Para a função poder retornar todas as Categorias
 	public ResponseEntity<List<CategoriaDTO>> findAll() { //converter lista de categoria para CategoriaDTO, vai em categoria DTO é cria um construtor que recebe um objeto da camada de dominio
 		List<Categoria> list = service.findAll();// FindAll metodo para voltar todas as Categorias
 		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList()); //Converter lista para outra lista Percorrer a lista usando o metodo stream / para cada obj da minha lista estou usando -> o aero function para criar uma função anonima que recebe um objeto e criar uma categoriaDto obj como argumento 
 		return ResponseEntity.ok().body(listDto);
-		
+	}
+	
+	@RequestMapping(value = "/page",method = RequestMethod.GET) // Para a função poder retornar todas as Categorias
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
+			 @RequestParam(value="page", defaultValue="0") Integer page,
+			 @RequestParam(value="linesPerPage", defaultValue="24") Integer linesPerPage, 
+			 @RequestParam(value="orderBy", defaultValue="nome") String orderBy,
+			 @RequestParam(value="direction", defaultValue="ASC") String direction) { //converter lista de categoria para CategoriaDTO, vai em categoria DTO é cria um construtor que recebe um objeto da camada de dominio
+		Page<Categoria> list = service.findPage(page, linesPerPage, orderBy, direction);// FindAll metodo para voltar todas as Categorias
+		Page<CategoriaDTO> listDto =list.map(obj -> new CategoriaDTO(obj)); //Converter lista para outra lista DTO
+		return ResponseEntity.ok().body(listDto);
 	}
 	
 }
