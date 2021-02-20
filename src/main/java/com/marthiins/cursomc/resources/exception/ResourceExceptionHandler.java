@@ -14,7 +14,7 @@ import javassist.tools.rmi.ObjectNotFoundException;
 @ControllerAdvice // Padrão do controllerAdvice tem que ter essa assinatura
 public class ResourceExceptionHandler {
 
-	@ExceptionHandler(ObjectNotFoundException.class)
+	@ExceptionHandler(ObjectNotFoundException.class)/* Para indicar que é um tratador de exceções desse tipo; */
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request){
 		
 		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());//Estanciei o Objeto Standa

@@ -1,5 +1,6 @@
 package com.marthiins.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 		Optional<Categoria> obj = repo.findById(id); //findOne faz a busca no banco de Dados com base no Id
 		/* Esse modelo é para o Sprint a partir da 2.0 */
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				 "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
+				 "Objeto não encontrado! ID: " + id + ", Tipo: " + Categoria.class.getName()));
 	
 	}
 
@@ -41,9 +42,13 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 			repo.deleteById(id);
 		}
 		catch (DataIntegrityViolationException e) {
-	      throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos");// tenho que receber essa Categoria aqui na camada do CategoriaResource
+	      throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos.");// tenho que receber essa Categoria aqui na camada do CategoriaResource
 		}
 
+	}
+	
+	public List<Categoria> findAll(){
+		return repo.findAll();
 	}
 }
 	

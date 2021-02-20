@@ -1,6 +1,9 @@
 package com.marthiins.cursomc.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.marthiins.cursomc.domain.Categoria;
+import com.marthiins.cursomc.dto.CategoriaDTO;
 import com.marthiins.cursomc.services.CategoriaService;
 
 @RestController
@@ -47,6 +51,14 @@ public class CategoriaResource {
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build(); //Tem que implementar lá no Categoria Service
+	}
+	
+	@RequestMapping(method = RequestMethod.GET) // Para a função poder retornar todas as Categorias
+	public ResponseEntity<List<CategoriaDTO>> findAll() { //converter lista de categoria para CategoriaDTO, vai em categoria DTO é cria um construtor que recebe um objeto da camada de dominio
+		List<Categoria> list = service.findAll();// FindAll metodo para voltar todas as Categorias
+		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList()); //Converter lista para outra lista Percorrer a lista usando o metodo stream / para cada obj da minha lista estou usando -> o aero function para criar uma função anonima que recebe um objeto e criar uma categoriaDto obj como argumento 
+		return ResponseEntity.ok().body(listDto);
+		
 	}
 	
 }
