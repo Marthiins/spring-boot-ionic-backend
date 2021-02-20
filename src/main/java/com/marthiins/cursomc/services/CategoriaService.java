@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.marthiins.cursomc.domain.Categoria;
+import com.marthiins.cursomc.dto.CategoriaDTO;
 import com.marthiins.cursomc.repositories.CategoriaRepository;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
@@ -35,8 +36,9 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 	}
 	
 	public Categoria update(Categoria obj) {
-		find(obj.getId()); //Chamei esse find aqui porque ele já busca o objeto no banco e caso esse Id não exista ele me da uma excessão
-		return repo.save(obj); //mesmo metodo de inserir, porem quando o id esta nulo ele insere, porem quando não esta ele atualiza
+		Categoria newObj = find(obj.getId()); //Chamei esse find aqui porque ele já busca o objeto no banco e caso esse Id não exista ele me da uma excessão
+		updateData(newObj, obj);
+		return repo.save(newObj); //mesmo metodo de inserir, porem quando o id esta nulo ele insere, porem quando não esta ele atualiza
 	}
 	 
 	public void delete (Integer id) {
@@ -58,7 +60,17 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
 	    return repo.findAll(pageRequest); //Depois Categoria Resource para o metodo end point para pegar a requisição e chamar o metodo do service
 	}
+	
+	//Metodo auxiliar que instancia uma categoria atraves do DTO
+	public Categoria fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
+	}
+	
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+	}
 }
+
 	
 
 
