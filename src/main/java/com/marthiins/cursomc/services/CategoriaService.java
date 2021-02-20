@@ -3,10 +3,12 @@ package com.marthiins.cursomc.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.marthiins.cursomc.domain.Categoria;
 import com.marthiins.cursomc.repositories.CategoriaRepository;
+import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
 @Service
@@ -32,7 +34,18 @@ public class CategoriaService { //Classe responsavel por fazer a consulta nos re
 		find(obj.getId()); //Chamei esse find aqui porque ele já busca o objeto no banco e caso esse Id não exista ele me da uma excessão
 		return repo.save(obj); //mesmo metodo de inserir, porem quando o id esta nulo ele insere, porem quando não esta ele atualiza
 	}
+	 
+	public void delete (Integer id) {
+		find(id);
+		try {
+			repo.deleteById(id);
+		}
+		catch (DataIntegrityViolationException e) {
+	      throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos");// tenho que receber essa Categoria aqui na camada do CategoriaResource
+		}
 
+	}
 }
+	
 
 
