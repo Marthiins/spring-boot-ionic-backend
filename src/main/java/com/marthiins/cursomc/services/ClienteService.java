@@ -9,10 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.marthiins.cursomc.domain.Cidade;
 import com.marthiins.cursomc.domain.Cliente;
+import com.marthiins.cursomc.domain.Endereco;
+import com.marthiins.cursomc.domain.enums.TipoCliente;
 import com.marthiins.cursomc.dto.ClienteDTO;
+import com.marthiins.cursomc.dto.ClienteNewDTO;
 import com.marthiins.cursomc.repositories.ClienteRepository;
+import com.marthiins.cursomc.repositories.EnderecoRepository;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
@@ -22,13 +28,25 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	@Autowired //para instanciar um repositorio no spring utilizamos a anotação @Autowired
 	private ClienteRepository repo; //declarar uma dependencia de um objeto do tipo Repository
 	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
+	
 	public Cliente find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
 		Optional<Cliente> obj = repo.findById(id); //findOne faz a busca no banco de Dados com base no Id
 		/* Esse modelo é para o Sprint a partir da 2.0 */
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				 "Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	
+	     }
+	@Transactional
+	public Cliente insert(Cliente obj) {
+		obj.setId(null);
+		obj = repo.save(obj);
+		enderecoRepository.saveAll(obj.getEnderecos()); // Para esse metodo funcionar tive que colocar no cliente DTO cli.getEnderecos().add(end);
+		return obj;
 	}
+	
 	public Cliente update(Cliente obj) {
 		Cliente newObj = find(obj.getId()); //Chamei esse find aqui porque ele já busca o objeto no banco e caso esse Id não exista ele me da uma excessão
 		updateData(newObj, obj);
@@ -59,6 +77,22 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	public Cliente fromDTO(ClienteDTO objDto) {
 		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null);
 	}
+	
+	public Cliente fromDTO(ClienteNewDTO objDto) {
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo())); //Converter o numero inteiro para o tipo de cliente usei o TipoCliente.toEnum(objDto.getTipo
+		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if (objDto.getTelefone2()!=null) {
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		if (objDto.getTelefone3()!=null) {
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		return cli;
+	}
+
 	
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
