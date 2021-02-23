@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,8 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) //Definindo estrategica automatica dos ID
 	private Integer id;
 	private String nome;
+	
+	@Column(unique = true)//essa anotação faz com que o banco de dados não haja repetição, uma forma de dizer que esse campo vai ser uma chave canditada
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo; //estou armazenando um numero inteiro , mas a classe cliente expoe o dado tipo cliente
