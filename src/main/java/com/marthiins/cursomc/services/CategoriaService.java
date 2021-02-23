@@ -16,6 +16,9 @@ import com.marthiins.cursomc.repositories.CategoriaRepository;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
+
+//OK REVISADO
+
 @Service
 public class CategoriaService { //Classe responsavel por fazer a consulta nos repositorios
 	

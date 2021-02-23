@@ -10,33 +10,32 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
-
-import javassist.tools.rmi.ObjectNotFoundException;
+import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
 @ControllerAdvice // Padrão do controllerAdvice tem que ter essa assinatura
 public class ResourceExceptionHandler {
 
-	@ExceptionHandler(ObjectNotFoundException.class)/* Para indicar que é um tratador de exceções desse tipo; */
-	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request){
+	@ExceptionHandler(ObjectNotFoundException.class)
+	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
 		
-		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());//Estanciei o Objeto Standa
-	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 	
 	@ExceptionHandler(DataIntegrityException.class)
-	public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException e, HttpServletRequest request){
+	public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException e, HttpServletRequest request) {
 		
-		StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());//Estanciei o Objeto Standa
-	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+		StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
-	
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
-		
-		ValidationError err = new ValidationError(HttpStatus.BAD_REQUEST.value(),"Erro de Validação", System.currentTimeMillis());
-		for (FieldError x : e.getBindingResult().getFieldErrors()) { //Percorrer a Lista de error e para cada erro vou gerar meuobjeto FieldError
+
+		ValidationError err = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação", System.currentTimeMillis());
+		for (FieldError x : e.getBindingResult().getFieldErrors()) {
 			err.addError(x.getField(), x.getDefaultMessage());
+		}		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
-		 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
-  }
 }

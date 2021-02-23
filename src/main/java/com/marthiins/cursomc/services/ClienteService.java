@@ -22,6 +22,9 @@ import com.marthiins.cursomc.repositories.EnderecoRepository;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
+
+//OK REVISADO
+
 @Service
 public class ClienteService { //Classe responsavel por fazer a consulta nos repositorios
 	
@@ -68,9 +71,9 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 		return repo.findAll();
 	}
 	
-	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {//paginação para as Clientes
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction),orderBy);
-	    return repo.findAll(pageRequest); //Depois Cliente Resource para o metodo end point para pegar a requisição e chamar o metodo do service
+	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest); //Depois Cliente Resource para o metodo end point para pegar a requisição e chamar o metodo do service
 	}
 	
 	//Metodo auxiliar que instancia um cliente atraves do DTO

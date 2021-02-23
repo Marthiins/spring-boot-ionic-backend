@@ -1,57 +1,48 @@
 package com.marthiins.cursomc.services.validation.utils;
 
-/*Fonte: https://gist.github.com/adrianoluis/5043397d378ae506d87366abb0ab4e30*/
+//Fonte: https://gist.github.com/adrianoluis/5043397d378ae506d87366abb0ab4e30
 public class BR {
-	
 	// CPF
-	private static final int[] WEIGHT_SSN = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+ private static final int[] weightSsn = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
 
-	// CNPJ
-	private static final int[] WEIGHT_TFN = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+ // CNPJ
+ private static final int[] weightTin = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
 
-	private static int recursiveSum(int[] weight, char[] chr, int number) {
-		if (number <= 0)
-			return 0;
-		final int chrIndex = number - 1;
-		final int weightIndex = weight.length > chr.length ? number : chrIndex;
-		return (recursiveSum(weight, chr, chrIndex) + Character.getNumericValue(chr[chrIndex]) * weight[weightIndex]);
-	}
+ private static int calculate(final String str, final int[] weight) {
+     int sum = 0;
+     for (int i = str.length() - 1, digit; i >= 0; i--) {
+         digit = Integer.parseInt(str.substring(i, i + 1));
+         sum += digit * weight[weight.length - str.length() + i];
+     }
+     sum = 11 - sum % 11;
+     return sum > 9 ? 0 : sum;
+ }
 
-	private static int calculate(final String str, final int[] weight) {
-		final char[] chr = str.toCharArray();
-		int sum = recursiveSum(weight, chr, chr.length);
-		sum = 11 - (sum % 11);
-		return sum > 9 ? 0 : sum;
-	}
+ /**
+  * Valida CPF
+  *
+  * @param ssn
+  * @return
+  */
+ public static boolean isValidCPF(final String ssn) {
+     if ((ssn == null) || (ssn.length() != 11) || ssn.matches(ssn.charAt(0) + "{11}")) return false;
 
-	private static boolean checkEquals(String tfn, int length, int[] weight) {
-		final String number = tfn.substring(0, length);
-		final int digit1 = calculate(number, weight);
-		final int digit2 = calculate(number + digit1, weight);
-		return tfn.equals(number + digit1 + digit2);
-	}
+     final Integer digit1 = calculate(ssn.substring(0, 9), weightSsn);
+     final Integer digit2 = calculate(ssn.substring(0, 9) + digit1, weightSsn);
+     return ssn.equals(ssn.substring(0, 9) + digit1.toString() + digit2.toString());
+ }
 
-	/**
-	 * Valida CPF
-	 *
-	 * @param ssn
-	 * @return
-	 */
-	public static boolean isValidCPF(String ssn) {
-		if (ssn == null || !ssn.matches("\\d{11}") || ssn.matches(ssn.charAt(0) + "{11}"))
-			return false;
-		return checkEquals(ssn, 9, WEIGHT_SSN);
-	}
+ /**
+  * Valida CNPJ
+  *
+  * @param tin
+  * @return
+  */
+ public static boolean isValidCNPJ(final String tin) {
+     if ((tin == null) || (tin.length() != 14) || tin.matches(tin.charAt(0) + "{14}")) return false;
 
-	/**
-	 * Valida CNPJ
-	 *
-	 * @param tfn
-	 * @return
-	 */
-	public static boolean isValidCNPJ(String tfn) {
-		if (tfn == null || !tfn.matches("\\d{14}") || tfn.matches(tfn.charAt(0) + "{14}"))
-			return false;
-		return checkEquals(tfn, 12, WEIGHT_TFN);
-	}
+     final Integer digit1 = calculate(tin.substring(0, 12), weightTin);
+     final Integer digit2 = calculate(tin.substring(0, 12) + digit1, weightTin);
+     return tin.equals(tin.substring(0, 12) + digit1.toString() + digit2.toString());
+ }
 }

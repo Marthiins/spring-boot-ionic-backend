@@ -9,6 +9,9 @@ import com.marthiins.cursomc.domain.Pedido;
 import com.marthiins.cursomc.repositories.PedidoRepository;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
+
+//OK REVISADO
+
 @Service
 public class PedidoService { //Classe responsavel por fazer a consulta nos repositorios
 	

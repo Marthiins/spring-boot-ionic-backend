@@ -1,5 +1,8 @@
 package com.marthiins.cursomc.services.exception;
 
+
+//OK REVISADO
+
 public class DataIntegrityException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

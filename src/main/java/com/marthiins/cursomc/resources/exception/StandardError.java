@@ -2,12 +2,14 @@ package com.marthiins.cursomc.resources.exception;
 
 import java.io.Serializable;
 
+//OK REVISADO
+
 public class StandardError implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
-    private Integer status;
-	private String msg;
-	private Long timeStamp;
+    private Integer status; //status http do erro;
+	private String msg; //mensagem do erro;
+	private Long timeStamp; //Instante que ocorreu o erro;
 	
 	public StandardError(Integer status, String msg, Long timeStamp) {
 		super();
@@ -39,6 +41,4 @@ public class StandardError implements Serializable {
 	public void setTimeStamp(Long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
-	
 }
