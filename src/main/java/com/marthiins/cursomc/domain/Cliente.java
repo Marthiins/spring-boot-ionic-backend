@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class Cliente implements Serializable {
 	
 	//cliente tem varios endereço associação por isso da Lista
 	
-	@OneToMany(mappedBy = "cliente") //um para muitos e do outro lado foi mapeado pelo campo cliente
+	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL) //um para muitos e do outro lado foi mapeado pelo campo cliente //Usando o Cascate para fazer o delete se for apagar um cliente irei apagar os endereços dele
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	//Na modelagem como o telefone é uma String e uma entidade fraca que contem numero
