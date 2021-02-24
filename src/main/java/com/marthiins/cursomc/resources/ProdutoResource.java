@@ -28,13 +28,13 @@ public class ProdutoResource {
 	@Autowired
 	private ProdutoService service;
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Produto> find(@PathVariable Integer id) {
 		Produto obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(value = "nome", defaultValue = "") String nome,
 			@RequestParam(value = "categorias", defaultValue = "") String categorias,
@@ -46,8 +46,8 @@ public class ProdutoResource {
 		String nomeDecoded = URL.decodeParam(nome);
 		List<Integer> ids = URL.decodeIntList(categorias);
 		Page<Produto> list = service.search(nomeDecoded, ids, page, linesPerPage, orderBy, direction);
-		Page<ProdutoDTO> listDTO = list.map(obj -> new ProdutoDTO(obj));
+		Page<ProdutoDTO> listDtO = list.map(obj -> new ProdutoDTO(obj));
 
-		return ResponseEntity.ok().body(listDTO);
+		return ResponseEntity.ok().body(listDtO);
 	}
 }

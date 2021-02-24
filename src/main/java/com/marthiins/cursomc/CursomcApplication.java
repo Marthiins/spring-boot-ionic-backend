@@ -79,7 +79,7 @@ public class CursomcApplication implements CommandLineRunner {
 		Produto p4 = new Produto(null, "Mesa de escritório", 300.00);
 		Produto p5 = new Produto(null, "Toalha", 50.00);
 		Produto p6 = new Produto(null, "Colcha", 200.00);
-		Produto p7 = new Produto(null, "Tv 50 polegadas", 1800.00);
+		Produto p7 = new Produto(null, "TV true color", 1800.00);
 		Produto p8 = new Produto(null, "Roçadeira", 800.00);
 		Produto p9 = new Produto(null, "Abaju", 100.00);
 		Produto p10 = new Produto(null, "Pendente", 180.00);
@@ -88,17 +88,22 @@ public class CursomcApplication implements CommandLineRunner {
 		//Associação da Categorias aos produtos temos que adicionar 
 		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2, p4));
-		cat3.getProdutos().addAll(Arrays.asList(p5, p6));
-		cat4.getProdutos().addAll(Arrays.asList(p1, p2, p3, p7));
-		cat5.getProdutos().addAll(Arrays.asList(p8));
-		cat6.getProdutos().addAll(Arrays.asList(p9, p10));
-		cat7.getProdutos().addAll(Arrays.asList(p11));
-
 		
 		//Associar os Produtos as Categorias
 		p1.getCategorias().addAll(Arrays.asList(cat1, cat4));
 		p2.getCategorias().addAll(Arrays.asList(cat1 , cat2, cat4));
 		p3.getCategorias().addAll(Arrays.asList(cat1 , cat4));
+		
+		cat2.getProdutos().addAll(Arrays.asList(p2, p4));
+		cat3.getProdutos().addAll(Arrays.asList(p5, p6));
+		cat4.getProdutos().addAll(Arrays.asList(p1, p2, p3, p7));
+		cat5.getProdutos().addAll(Arrays.asList(p8));
+		cat6.getProdutos().addAll(Arrays.asList(p9, p10));
+		cat7.getProdutos().addAll(Arrays.asList(p11));
+		
+		p1.getCategorias().addAll(Arrays.asList(cat1, cat4));
+		p2.getCategorias().addAll(Arrays.asList(cat1, cat2, cat4));
+		p3.getCategorias().addAll(Arrays.asList(cat1, cat4));
 		p4.getCategorias().addAll(Arrays.asList(cat2));
 		p5.getCategorias().addAll(Arrays.asList(cat3));
 		p6.getCategorias().addAll(Arrays.asList(cat3));
@@ -107,7 +112,6 @@ public class CursomcApplication implements CommandLineRunner {
 		p9.getCategorias().addAll(Arrays.asList(cat6));
 		p10.getCategorias().addAll(Arrays.asList(cat6));
 		p11.getCategorias().addAll(Arrays.asList(cat7));
-		
 	
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7)); //Criar LIsta automatica para salvar no banco de dados
         produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)); // criar a Lista para salvar todos os produtos por enquanto so temos 3

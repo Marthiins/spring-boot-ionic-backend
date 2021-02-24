@@ -15,10 +15,6 @@ import com.marthiins.cursomc.repositories.CategoriaRepository;
 import com.marthiins.cursomc.repositories.ProdutoRepository;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
-
-//OK REVISADO
-
-
 @Service
 public class ProdutoService { // Classe responsavel por fazer a consulta nos repositorios
 
