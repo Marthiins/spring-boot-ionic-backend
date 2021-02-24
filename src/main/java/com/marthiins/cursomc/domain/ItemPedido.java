@@ -30,6 +30,12 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
+	
+	//Metodo calcular sub total item pedido , chamar getsub Total para ser conhecido pelo jason
+	public double getSubTotal() {
+		return (preco - desconto) * quantidade;
+	}
+	
 	//esses pedidos esta fazendo a referencia siclica etudo que começa com get ele intende que tem que serializar
 	@JsonIgnore //Ignorei para não puxar os pedidos
 	public Pedido getPedido() {
