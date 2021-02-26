@@ -41,6 +41,9 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 	@Autowired
 	private ClienteService clienteService;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	public Pedido find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
 		Optional<Pedido> obj = repo.findById(id); //findOne faz a busca no banco de Dados com base no Id
 		/* Esse modelo é para o Sprint a partir da 2.0 */
@@ -69,7 +72,7 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj); //Adicionando o obj dentro do println ele irar chamar o to string do objeto
+		emailService.sendOrderConfirmationEmail(obj );
 		return obj;
 	}
 }
