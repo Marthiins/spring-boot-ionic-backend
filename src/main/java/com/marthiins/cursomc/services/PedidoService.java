@@ -72,7 +72,7 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationEmail(obj );
+		emailService.sendOrderConfirmationHtmlEmail(obj );
 		return obj;
 	}
 }
