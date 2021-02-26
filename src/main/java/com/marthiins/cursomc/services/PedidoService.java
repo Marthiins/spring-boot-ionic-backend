@@ -38,6 +38,9 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 	@Autowired
 	private ProdutoService produtoService;
 	
+	@Autowired
+	private ClienteService clienteService;
+	
 	public Pedido find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
 		Optional<Pedido> obj = repo.findById(id); //findOne faz a busca no banco de Dados com base no Id
 		/* Esse modelo é para o Sprint a partir da 2.0 */
@@ -50,6 +53,7 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -60,10 +64,12 @@ public class PedidoService { //Classe responsavel por fazer a consulta nos repos
 		pagamentoRepository.save(obj.getPagamento());
 		for (ItemPedido ip : obj.getItens()) {
 			ip.setDesconto(0.0);
-			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());
+			ip.setProduto(produtoService.find(ip.getProduto().getId()));
+			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
+		System.out.println(obj); //Adicionando o obj dentro do println ele irar chamar o to string do objeto
 		return obj;
 	}
 }
