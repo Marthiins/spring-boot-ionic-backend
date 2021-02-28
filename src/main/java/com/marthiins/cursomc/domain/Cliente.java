@@ -33,6 +33,9 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo; //estou armazenando um numero inteiro , mas a classe cliente expoe o dado tipo cliente
 	
+	@JsonIgnore
+	private String senha;
+	
 	//cliente tem varios endereço associação por isso da Lista
 	
 	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL) //um para muitos e do outro lado foi mapeado pelo campo cliente //Usando o Cascate para fazer o delete se for apagar um cliente irei apagar os endereços dele
@@ -53,7 +56,7 @@ public class Cliente implements Serializable {
     }
  
     //não colocar as coleções nos Construtor com argumentos
-    public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+    public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -61,7 +64,8 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo==null) ? null : tipo.getCod(); //coloquei o getCod so para pegar o código tipo do cliente depois gerei uma condição se tipo for igual a nulo irei atribuir nulo
 		// caso o contrario atribuo o codigo com o opeardor ternario
-	}
+	    this.senha = senha;
+    }
 
 	public Integer getId() {
 		return id;
@@ -101,6 +105,15 @@ public class Cliente implements Serializable {
 
 	public void setTipo(TipoCliente tipo) {
 		this.tipo = tipo.getCod();
+	}
+	
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public List<Endereco> getEnderecos() {
@@ -151,6 +164,8 @@ public class Cliente implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 
 	
  

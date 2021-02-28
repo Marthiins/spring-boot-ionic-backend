@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.marthiins.cursomc.domain.Categoria;
@@ -33,6 +34,9 @@ import com.marthiins.cursomc.repositories.ProdutoRepository;
 @Service
 public class DBService {
 	//Dependencias
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	@Autowired
 	private CategoriaRepository categoriaRepository; //Os repository vai ser o objeto responsavel por salvar os dados no Banco de Dados
 	@Autowired
@@ -123,7 +127,7 @@ public class DBService {
 	    cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 	    
 	    //Instanciar o Cliente
-	    Cliente cli1 = new Cliente(null, "Maria Silva", "sergio.marthiins@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+	    Cliente cli1 = new Cliente(null, "Maria Silva", "sergio.marthiins@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
 	    cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
 	    
 	    //os endereços conhece a cidade e os clientes
