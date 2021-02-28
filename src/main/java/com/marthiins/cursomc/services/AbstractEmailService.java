@@ -23,12 +23,14 @@ public abstract class AbstractEmailService implements EmailService {
 	@Autowired
 	private TemplateEngine templateEngine;
 
-	@Autowired
+	@Autowired(required=true)
 	private JavaMailSender javaMailSender;
 	@Override
 	public void sendOrderConfirmationEmail(Pedido obj) {
 		SimpleMailMessage sm = prepareSimpleMailMessageFromPedido(obj);
-		sendEmail(sm);
+		sendEmail(sm);// EmailService
+		// !Template Message = consegue implementar o metodo baseado em metodos
+		// abstratos que dpois vão ser implementados pelas implementações da inferface;
 
 	}
 
@@ -42,6 +44,8 @@ public abstract class AbstractEmailService implements EmailService {
 		return sm;
 	}
 
+	// protected pois pode ser acessado por subclasses, só não pode ser usado pelos
+		// usuários das classes(controladores e serviços);
 	protected String htmlFromTemplatePedido(Pedido obj) {
 		Context context = new Context();
 		context.setVariable("pedido", obj);
@@ -64,7 +68,7 @@ public abstract class AbstractEmailService implements EmailService {
 		mmh.setTo(obj.getCliente().getEmail());
 		mmh.setFrom(sender);
 		mmh.setSubject("Pedido confirmado! Código" + obj.getId());
-		mmh.setText(htmlFromTemplatePedido(obj), true);
+		mmh.setText(htmlFromTemplatePedido(obj), true);// true confirma que é arquivo html;
 		
 		return mimeMessage;
 	}
