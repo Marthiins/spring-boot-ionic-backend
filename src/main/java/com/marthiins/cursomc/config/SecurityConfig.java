@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,25 +25,34 @@ import com.marthiins.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)// Permite inserr anotações de pré autorizações nos endpoints;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-
+	//Automaticamente será identificado a implementação da classe UserDetailsServiceImpl;
 	@Autowired
     private Environment env;
 
 	@Autowired
 	private JWTUtil jwtUtil;
-
+	// Caminhos que por padrão estaram liberados;
 	private static final String[] PUBLIC_MATCHERS = {
-			"/h2-console/**"
+			"/h2-console/**"// o endpoint e tudo que vier depois;
 	};
+	
+	// Caminhos que será permitido apenas leitura;
 	private static final String[] PUBLIC_MATCHERS_GET = {
 			"/produtos/**",
 			"/categorias/**",
+			
+	};
+	
+	private static final String[] PUBLIC_MATCHERS_POST = {
 			"/clientes/**"
 	};
+	
+	// Sobreescrever o método configure;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
@@ -52,18 +62,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
+		    .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll() // permitir autorização de post no vetor de post;
+			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll() // permitir autorização de get no vetor de get;
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.anyRequest().authenticated();
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));;/*Em SecurityConfig, registrar o filtro de autenticação*/
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
-	@Override
+	@Override //Código padrão
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		//passwordEncoder recebe a função mais abaixo. Injetar a classe userDetailsService
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	
+		/*
+		 * Implementando autenticação e geração do token JWT, checklist: Em
+		 * SecurityConfig, sobrescrever o método: public void
+		 * configure(AuthenticationManagerBuilder auth).
+		 */
 	}
+	
+	// Definindo um ban dando acesso basico a todos os caminhos por multiplas
+		// fontes.
+		// https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
@@ -72,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return source;
 	}
 	
+	// Função para encriptar a senha do cliente;
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();

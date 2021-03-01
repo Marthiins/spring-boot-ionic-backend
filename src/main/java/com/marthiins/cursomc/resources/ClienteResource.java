@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,15 +23,20 @@ import com.marthiins.cursomc.dto.ClienteDTO;
 import com.marthiins.cursomc.dto.ClienteNewDTO;
 import com.marthiins.cursomc.services.ClienteService;
 
-@RestController
-@RequestMapping(value="/clientes") //categoria é um endpoint
+
+/* -- Controlador REST -- */
+@RestController// Anotações necessárias para Rest;
+@RequestMapping(value="/clientes") // Necessário para direcionar a url para esse recurso;
 public class ClienteResource {
 
 	@Autowired
 	private ClienteService service;
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Cliente> find(@PathVariable Integer id) { //para o spring saber que esse id /{id} da minha URL para o ID da variavel colocamos a anotação @PathVable
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)// Para a função poder funcionar deve-se anota-la com o devido metodo;
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) {// Para identificar o id que o usuário digitou a anotação PathVarable direciona;
+		//O ResponseEntity automaticamente já encapsula varias info http para o serviço rest;
+		
+		
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 		
@@ -53,19 +59,20 @@ public class ClienteResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 }
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE) // Para a função poder funcionar deve-se anota-la com o devido metodo delete 
     public ResponseEntity<Void> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build(); //Tem que implementar lá no Cliente Service
 	}
-	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping( method = RequestMethod.GET) // Para a função poder retornar todas as Clientes
 	public ResponseEntity<List<ClienteDTO>> findAll() { //converter lista de categoria para ClienteDTO, vai em categoria DTO é cria um construtor que recebe um objeto da camada de dominio
 		List<Cliente> list = service.findAll();// FindAll metodo para voltar todas as Clientes
 		List<ClienteDTO> listDto = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList()); //Converter lista para outra lista Percorrer a lista usando o metodo stream / para cada obj da minha lista estou usando -> o aero function para criar uma função anonima que recebe um objeto e criar uma categoriaDto obj como argumento 
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/page",method = RequestMethod.GET) // Para a função poder retornar todas as Clientes
 	public ResponseEntity<Page<ClienteDTO>> findPage(
 			 @RequestParam(value="page", defaultValue="0") Integer page,
