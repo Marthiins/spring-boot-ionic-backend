@@ -67,4 +67,14 @@ public class UserSS implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	//daqui pra cima:
+		/*
+		 * Implementando autenticação e geração do token JWT, checklist: Criar classe de
+		 * usuário conforme contrato do Spring Security (implements UserDetails)
+		 */
+		
+		public boolean hasRole(Perfil perfil) {
+			return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+		}
 }

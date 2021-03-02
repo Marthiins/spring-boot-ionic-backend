@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.marthiins.cursomc.domain.Cidade;
 import com.marthiins.cursomc.domain.Cliente;
 import com.marthiins.cursomc.domain.Endereco;
+import com.marthiins.cursomc.domain.enums.Perfil;
 import com.marthiins.cursomc.domain.enums.TipoCliente;
 import com.marthiins.cursomc.dto.ClienteDTO;
 import com.marthiins.cursomc.dto.ClienteNewDTO;
 import com.marthiins.cursomc.repositories.ClienteRepository;
 import com.marthiins.cursomc.repositories.EnderecoRepository;
+import com.marthiins.cursomc.security.UserSS;
+import com.marthiins.cursomc.services.exception.AuthorizationException;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
@@ -40,6 +43,10 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	
 	
 	public Cliente find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Cliente> obj = repo.findById(id); //findOne faz a busca no banco de Dados com base no Id
 		/* Esse modelo é para o Sprint a partir da 2.0 */
 		return obj.orElseThrow(() -> new ObjectNotFoundException(

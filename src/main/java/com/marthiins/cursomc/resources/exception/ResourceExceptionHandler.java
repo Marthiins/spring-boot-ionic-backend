@@ -9,13 +9,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.marthiins.cursomc.services.exception.AuthorizationException;
 import com.marthiins.cursomc.services.exception.DataIntegrityException;
 import com.marthiins.cursomc.services.exception.ObjectNotFoundException;
 
 @ControllerAdvice // Padrão do controllerAdvice tem que ter essa assinatura
 public class ResourceExceptionHandler {
+	
+	/* Essa implementação é padrão do @ControllerAdvice */
 
-	@ExceptionHandler(ObjectNotFoundException.class)
+	/*
+	 * Classe auxiliar que irá interceptar as excesões, ela terá a assinatura abaixo
+	 */
+
+	@ExceptionHandler(ObjectNotFoundException.class)/* Para indicar que é um tratador de exceções desse tipo; */
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
 		
 		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
@@ -38,4 +45,12 @@ public class ResourceExceptionHandler {
 		}		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
+
+		StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+	
 }
