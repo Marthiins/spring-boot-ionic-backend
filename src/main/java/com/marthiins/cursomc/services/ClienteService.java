@@ -1,5 +1,6 @@
 package com.marthiins.cursomc.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.marthiins.cursomc.domain.Cidade;
 import com.marthiins.cursomc.domain.Cliente;
@@ -40,6 +42,9 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private S3Service s3Service;
 	
 	
 	public Cliente find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
@@ -111,6 +116,10 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 
 	}
