@@ -1,10 +1,12 @@
 package com.marthiins.cursomc.services;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +48,11 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	@Autowired
 	private S3Service s3Service;
 	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")//chave application.properties
+	private String prefix;
 	
 	public Cliente find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
 		UserSS user = UserService.authenticated();
@@ -124,13 +131,11 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 			throw new AuthorizationException("Acesso negado");
 		}
 
-		URI uri = s3Service.uploadFile(multipartFile);
-
-		Cliente cli = find(user.getId());//Salvando no cliente que esta logado
-		cli.setImageUrl(uri.toString());
-		repo.save(cli);
-//Salvar no banco de dados o cliente com a URI dele
-		return uri;
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefix + user.getId() + ".jpg";
+		
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
+		
 	}
 
 	}
