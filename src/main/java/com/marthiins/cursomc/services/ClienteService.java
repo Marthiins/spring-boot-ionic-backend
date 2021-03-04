@@ -54,6 +54,9 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	@Value("${img.prefix.client.profile}")//chave application.properties
 	private String prefix;
 	
+	@Value("${img.profile.size}")//Redicionamento da imagem do properties que coloquei 200
+	private Integer size;
+	
 	public Cliente find(Integer id) { //Operação capaz de buscar a categoria pelo codigo
 		UserSS user = UserService.authenticated();
 		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
@@ -132,6 +135,9 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 		}
 
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
+		
 		String fileName = prefix + user.getId() + ".jpg";
 		
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
