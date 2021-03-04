@@ -119,7 +119,18 @@ public class ClienteService { //Classe responsavel por fazer a consulta nos repo
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+		UserSS user = UserService.authenticated();//Usuario Logado
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
+		URI uri = s3Service.uploadFile(multipartFile);
+
+		Cliente cli = find(user.getId());//Salvando no cliente que esta logado
+		cli.setImageUrl(uri.toString());
+		repo.save(cli);
+//Salvar no banco de dados o cliente com a URI dele
+		return uri;
 	}
 
 	}
