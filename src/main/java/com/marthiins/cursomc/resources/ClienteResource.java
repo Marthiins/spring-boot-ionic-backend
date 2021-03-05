@@ -36,11 +36,15 @@ public class ClienteResource {
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)// Para a função poder funcionar deve-se anota-la com o devido metodo;
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {// Para identificar o id que o usuário digitou a anotação PathVarable direciona;
 		//O ResponseEntity automaticamente já encapsula varias info http para o serviço rest;
-		
-		
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 		
+	}
+	
+	@RequestMapping(value="/email", method=RequestMethod.GET)//O endpoint vai ser /cliente /email e vai receber um valor como email que é um parametro no meu Get
+	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
